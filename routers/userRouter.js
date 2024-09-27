@@ -52,6 +52,25 @@ router.get('/:id', authorize, async (req, res) => {
     }
 });
 
+// Update user details (username and email)
+router.put('/:id', authorize, async (req, res) => {
+    const { username, email } = req.body;
+    
+    try {
+        let user = await User.findById(req.params.id);
+        if (!user) return res.status(404).send('User not found');
+
+        user.username = username || user.username;
+        user.email = email || user.email;
+
+        const updatedUser = await user.save();
+        res.send(_.pick(updatedUser, ['_id', 'username', 'email']));
+    } catch (error) {
+        res.status(500).send('Server error');
+    }
+});
+
+
 router.route('/')
     .post(newUser)
 

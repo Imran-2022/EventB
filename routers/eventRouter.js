@@ -26,11 +26,34 @@ const allEvents=async(req,res)=>{
     res.send(events);
 }
 
+// Delete an event by ID
+const deleteEvent = async (req, res) => {
+    try {
+        const event = await Event.findById(req.params.id);
+        if (!event) return res.status(404).send('Event not found');
+        
+        // Check if the logged-in user is the owner of the event
+        if (event.userId.toString() !== req.user.id) {
+            return res.status(403).send('You are not authorized to delete this event');
+        }
+
+        await Event.deleteOne({ _id: req.params.id }); // Use deleteOne instead of remove
+        res.send('Event deleted');
+    } catch (error) {
+        console.error('Error while deleting event:', error.message);
+        res.status(500).send('Server error');
+    }
+};
+
+
 router.route('/')
     .get(authorize,eventList)
     .post(authorize,newEvent)
 
 router.route('/all')
     .get(allEvents)
+
+router.route('/:id')
+    .delete(authorize, deleteEvent);
 
 module.exports=router;
