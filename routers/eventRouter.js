@@ -21,9 +21,16 @@ const eventList = async(req,res)=>{
 
 }
 
+const allEvents=async(req,res)=>{
+    const events=await Event.find();
+    res.send(events);
+}
 
 router.route('/')
     .get(authorize,eventList)
     .post(authorize,newEvent)
+
+router.route('/all')
+    .get(allEvents)
 
 module.exports=router;
