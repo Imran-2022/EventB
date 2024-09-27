@@ -16,12 +16,18 @@ const userSchema = Schema({
         required:true,
         minlenght:5,
         maxlength:1024,
+    },
+    username:{
+        type:String,
+        required:true,
+        minlenght:3,
+        maxlength:20,
     }
 });
 
 
 userSchema.methods.generateJWT=function(){
-    const token=jwt.sign({id:this._id,email:this.email},process.env.JWT_SECRET_KEY,{
+    const token=jwt.sign({id:this._id,email:this.email,username:this.username},process.env.JWT_SECRET_KEY,{
         expiresIn:"3h"
     });
 
@@ -32,7 +38,8 @@ userSchema.methods.generateJWT=function(){
 const validateUser=user=>{
     const schema=Joi.object({
         email : Joi.string().min(5).max(255).required().email(),
-        password:Joi.string().min(5).max(255).required()
+        password:Joi.string().min(5).max(255).required(),
+        username:Joi.string().min(3).max(20).required()
     
     });
    return schema.validate(user);

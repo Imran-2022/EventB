@@ -12,7 +12,7 @@ const newUser = async(req,res)=>{
     if(user)return res.status(400).send('user already registered !');
 
     // user = new User({email:req.body.email,password:req.body.password});
-    user = new User(_.pick(req.body,['email','password']));
+    user = new User(_.pick(req.body,['email','password','username']));
 
     const salt=await bcrypt.genSalt(10);
     user.password=await bcrypt.hash(user.password,salt);
@@ -22,7 +22,7 @@ const newUser = async(req,res)=>{
     const result=await user.save();
     return res.status(201).send({
         token:token,
-        user:_.pick(result,['_id','email'])
+        user:_.pick(result,['_id','email','username'])
     });
 
 }
@@ -37,7 +37,7 @@ const authUser= async(req,res)=>{
     const  token =user.generateJWT();
     res.send({
         token:token,
-        user:_.pick(user,['_id','email'])
+        user:_.pick(user,['_id','email','username'])
     })
 }
 
