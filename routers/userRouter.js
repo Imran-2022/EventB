@@ -2,6 +2,7 @@ const express =require('express');
 const bcrypt = require('bcrypt');
 const _=require('lodash');
 const {User,validate} = require('../models/user');
+const authorize=require('../middlewares/authorize');
 
 const router = express.Router();
 const newUser = async(req,res)=>{
@@ -40,6 +41,16 @@ const authUser= async(req,res)=>{
         user:_.pick(user,['_id','email','username'])
     })
 }
+// Fetch user details by ID
+router.get('/:id', authorize, async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id).select('-password'); // Exclude the password field
+        if (!user) return res.status(404).send('User not found');
+        res.send(user);
+    } catch (err) {
+        res.status(500).send('Server error');
+    }
+});
 
 router.route('/')
     .post(newUser)
