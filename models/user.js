@@ -35,9 +35,9 @@ const validateUser=user=>{
         password:Joi.string().min(5).max(255).required()
     
     });
-   return schema.vaidate(user);
+   return schema.validate(user);
 }
 
 
 module.exports.User=model('User',userSchema);
-module.exports.vaidate=validateUser;
+module.exports.validate=validateUser;

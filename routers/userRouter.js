@@ -14,7 +14,7 @@ const newUser = async(req,res)=>{
     // user = new User({email:req.body.email,password:req.body.password});
     user = new User(_.pick(req.body,['email','password']));
 
-    const solt=await bcrypt.genSolt(10);
+    const salt=await bcrypt.genSalt(10);
     user.password=await bcrypt.hash(user.password,salt);
 
     const token=user.generateJWT();
@@ -27,10 +27,24 @@ const newUser = async(req,res)=>{
 
 }
 
+const authUser= async(req,res)=>{
+    let user = await User.findOne({email:req.body.email});
+    if(!user)return res.status(400).send("invalid email or passowrd!");
+
+    const validUser=await bcrypt.compare(req.body.password,user.password);
+    if(!validUser)return res.status(400).send("invalid email or passowrd");
+
+    const  token =user.generateJWT();
+    res.send({
+        token:token,
+        user:_.pick(user,['_id','email'])
+    })
+}
+
 router.route('/')
     .post(newUser)
 
 router.route('/auth')
-    .post()
+    .post(authUser)
 
 module.exports=router;
