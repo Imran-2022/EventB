@@ -6,16 +6,7 @@ const eventRouter=require('./routers/eventRouter');
 
 const app =express();
 
-// Configure CORS
-const corsOptions = {
-    origin: 'https://eventm0.netlify.app', // Change this to your frontend URL
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific HTTP methods
-    credentials: true, // Allow credentials if needed
-  };
-  
-app.use(cors(corsOptions));
-
-
+app.use(cors());
 app.use(express.json());
 
 app.use('/user',userRouter);
