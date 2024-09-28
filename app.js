@@ -1,15 +1,46 @@
 const express = require('express');
-const cors=require('cors');
-const userRouter=require('./routers/userRouter')
-const eventRouter=require('./routers/eventRouter');
-// cross origin resource sharing.
+const cors = require('cors');
+const userRouter = require('./routers/userRouter');
+const eventRouter = require('./routers/eventRouter');
 
-const app =express();
+const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-app.use('/user',userRouter);
-app.use('/event',eventRouter);
+// Route to show all routes and a welcome message
+app.get('/', (req, res) => {
+    const routes = `
+        <html>
+            <head>
+                <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
+                <style>
+                    body {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100vh; /* Full height of the viewport */
+                        margin: 0;
+                        background-color: black; /* Black background */
+                        color: white; /* White text */
+                        font-family: 'Roboto', sans-serif; /* Stylish font */
+                    }
+                    h1 {
+                        font-size: 3em; /* Optional: adjust font size */
+                    }
+                </style>
+            </head>
+            <body>
+                <h1>EventM API - by Imran!</h1>
+            </body>
+        </html>
+    `;
+    res.send(routes);
+});
 
-module.exports=app;
+
+// Use the routers
+app.use('/user', userRouter);
+app.use('/event', eventRouter);
+
+module.exports = app;
