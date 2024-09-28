@@ -2,7 +2,7 @@
   "name": "even-api",
   "version": "1.0.0",
   "description": "this is a api for even management app",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
